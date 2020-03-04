@@ -7,7 +7,11 @@
 3. Run `python etl.py` to grab, process and store the data in the tables you just created
 
 ## Project Overview
-## Part I - Writing the Queries
+## Part I - Defining the Schema
+* Below is a a diagram depicting the schema for the database in this project
+![schema](schema.png)
+
+## Part II - Writing the Queries
 * Before doing anything else, writing the queries that create the tables and insert data into said tables, but also dropping them if they exist so as not to create duplicate tables is key
 * This is all done in `sql_queries.py`
 * It is all mostly written in raw SQL, but both the create and insert queries are stored within lists to easily iterate over later
