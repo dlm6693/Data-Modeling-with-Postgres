@@ -6,14 +6,30 @@ from sql_queries import *
 
 #helper function to chunk data for efficient loading
 def chunk_and_execute(cur, query, data, chunksize):
+    """
+    Helper function that chunks data and pushes each chunk to the database
+    Parameters:
+        cur (db cursor object): Object that points to the database
+        query (str): SQL query that tells the cursor what to do
+        data (list): Datapoints to be injected into the database
+        chunksize (int): The size of each chunk
+    """
     for i in range(0, len(data), chunksize):
         chunk = data[i:i+chunksize]
         cur.executemany(query, chunk)
 
 def process_song_files(cur, filepaths):
-    # open song file
+    """
+    Function that processes song files, sending them to the artists and songs table
+    in the database
+    Parameters:
+        cur (db cursor object): Object that points to the database
+        filepaths (list): List of strings indicating each location of JSON files
+        to be processed
+    """
+    
     dfs = []
-    #read each filepath into a dataframe then combine them all into one df
+    #read each filepath into a dataframe then combine them all into one
     for path in filepaths:
         dfa = pd.read_json(path, lines=True)
         dfs.append(dfa)
@@ -37,7 +53,14 @@ def process_song_files(cur, filepaths):
     
 
 def process_log_files(cur, filepaths):
-    # open log file
+    """
+    Function that processes log files, sending them to the time, users and songplays
+    tables in the database.
+    Parameters:
+        cur (db cursor object): Object that points to the database
+        filepaths (list): List of strings indicating each location of JSON files
+        to be processed
+    """
     dfs = []
     for path in filepaths:
         dfa = pd.read_json(path, lines=True)
@@ -119,6 +142,14 @@ def process_log_files(cur, filepaths):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Function that grabs filepaths and processes data, utilizing functions above.
+    Parameters: 
+        cur (db cursor object): Object that points to the database
+        conn (db conncection object): Object that establishes connection with database
+        filepath (str): Base filepath to grab all JSON files to process
+        func (function): One of the functions above to actually process data
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -137,6 +168,9 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    Function that establishes connection to database and processes data
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
